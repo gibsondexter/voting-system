@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>7th Cohort SRC Primary Elections</title>
+
+<script type="module">
+  // Firebase imports
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+  // Firebase config (yours)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtLwI4jGwqPRJpqp5RkBZFqzaKYwAZYfY",
+    authDomain: "th-privoting.firebaseapp.com",
+    projectId: "th-privoting",
+    storageBucket: "th-privoting.firebasestorage.app",
+    messagingSenderId: "441825882241",
+    appId: "1:441825882241:web:d49dede27ba6e48501dd80"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Main function
+  window.checkReg = async function() {
+    const regNumber = document.getElementById("regNumber").value.trim();
+
+    if(regNumber === "") {
+      alert("Please enter your registration number");
+      return;
+    }
+
+    // Convert / to - for Firebase IDs
+    const formattedReg = regNumber.replaceAll("/", "-");
+
+    const docRef = doc(db, "validRegs", formattedReg);
+    const docSnap = await getDoc(docRef);
+
+    if(docSnap.exists()) {
+      // Change message
+      document.getElementById("message").innerHTML =
+        "Welcome to 7th Cohort SRC Primary Elections.<br><br>" +
+        "Choose the leader of your choice.<br><br>" +
+        "Click the link below to vote.";
+
+      // Hide input + button
+      document.getElementById("regNumber").style.display = "none";
+      document.getElementById("submitBtn").style.display = "none";
+
+      // Show vote section
+      document.getElementById("voteSection").style.display = "block";
+    } else {
+      alert("REG NUMBER NOT FOUND ❌");
+    }
+  }
+</script>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+
+  .login-container {
+    background-color: white;
+    padding: 40px 50px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 350px;
+  }
+
+  h1 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 24px;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 16px;
+  }
+
+  input[type="text"] {
+    width: 80%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+
+  button {
+    background-color: #4facfe;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background-color: #00f2fe;
+  }
+</style>
+</head>
+
+<body>
+  <div class="login-container">
+    <h1>7th Cohort SRC Primary Elections</h1>
+
+    <p id="message">Enter your registration number to vote</p>
+
+    <input type="text" id="regNumber" placeholder="Enter your reg number">
+    <br>
+
+    <button id="submitBtn" onclick="checkReg()">Submit</button>
+
+    <div id="voteSection" style="display:none; margin-top:20px;">
+      <p>
+        Welcome to 7th Cohort SRC Primary Elections.<br><br>
+        Choose the leader of your choice.<br><br>
+        Click the link below to vote.
+      </p>
+
+      <a href="https://forms.gle/hyZT5WrMDPmbFWnH6" target="_blank">
+        <button>Go to Voting Form</button>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
